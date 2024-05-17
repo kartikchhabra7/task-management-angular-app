@@ -1,0 +1,112 @@
+<header class="text-center mt-2" *ngIf="loggedInUser">
+  <h2>Hello,{{ loggedInUser.userName | uppercase }}</h2>
+</header>
+
+<div class="container mt-4" *ngIf="loggedInUser">
+  <div class="card">
+    <div class="card-header">User Details</div>
+    <div class="card-body">
+      <table class="table table-bordered">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Username</th>
+            <th scope="col">Email</th>
+            <th scope="col">Password</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ loggedInUser.id }}</td>
+            <td>{{ loggedInUser.userName }}</td>
+            <td>{{ loggedInUser.email }}</td>
+            <td>{{ loggedInUser.password }}</td>
+            <td>
+              <button class="btn btn-primary" (click)="logOutUser()">
+                Log out
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div
+  class="container mt-5 d-flex justify-content-between task-note"
+  *ngIf="loggedInUser"
+>
+  <div class="form-control mx-5 mt-4">
+    <h3 class="text-center">Task Note</h3>
+    <label for="">Title</label>
+    <input
+      type="text"
+      name="taskInput"
+      class="form-control mb-3"
+      [(ngModel)]="inputValue"
+      placeholder="Enter a Task.."
+    />
+    <label>Date</label>
+    <input
+      type="text"
+      name="taskDate"
+      class="form-control mb-3"
+      [value]="formattedDate"
+      readonly
+    />
+    <label for="">Priority</label>
+    <select
+      class="form-control mb-3"
+      [(ngModel)]="selectPriority"
+      (change)="onChangePriority($event)"
+    >
+      <option value="" disabled selected>Choose Priority</option>
+      <option value="low">Low</option>
+      <option value="medium">Medium</option>
+      <option value="high">High</option>
+    </select>
+
+    <div class="d-flex justify-content-start">
+      <button
+        class="btn btn-primary mx-2"
+        [ngClass]="{ 'btn-success': isUserEditActive }"
+        (click)="isUserEditActive ? updateData() : saveData()"
+      >
+        {{ isUserEditActive ? "Update Task" : "Add" }}
+      </button>
+      <button class="btn btn-secondary mx-2" (click)="clearInputValue()">
+        Clear
+      </button>
+    </div>
+  </div>
+
+  <div class="form-control mx-5 task-record-container mt-4">
+    <h3 class="text-center">Task Record</h3>
+    <div
+      *ngFor="let item of uniqueToDoData; let i = index"
+      class="card mb-3 task-record-list"
+    >
+      <div class="card-body d-flex justify-content-between align-items-center">
+        <span>{{ item.name }}</span>
+        <div class="btn-group">
+          <button (click)="editData(item)" class="btn btn-warning mx-2 btn-sm">
+            Edit
+          </button>
+          <button (click)="deleteData(i)" class="btn btn-danger mx-2 btn-sm">
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+    @if (uniqueToDoData.length>1) {
+
+    <div class="text-center">
+      <button class="btn btn-danger" (click)="deleteAllData()">
+        Delete All
+      </button>
+    </div>
+    }
+  </div>
+</div>
